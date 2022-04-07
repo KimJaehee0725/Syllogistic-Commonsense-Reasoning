@@ -1,0 +1,4 @@
+__pycache__
+model_log/*.pt
+./wandb
+*.ipynb

@@ -1,0 +1,21 @@
+{
+    "os": "Linux-5.4.0-107-generic-x86_64-with-glibc2.29",
+    "python": "3.8.10",
+    "heartbeatAt": "2022-04-06T07:06:24.843757",
+    "startedAt": "2022-04-06T07:06:23.635757",
+    "docker": null,
+    "gpu": "NVIDIA GeForce RTX 2080 Ti",
+    "gpu_count": 1,
+    "cpu_count": 4,
+    "cuda": null,
+    "args": [
+        "-eval_interval",
+        "500"
+    ],
+    "state": "running",
+    "program": "main.py",
+    "codePath": "main.py",
+    "host": "jaehee",
+    "username": "root",
+    "executable": "/usr/bin/python3"
+}
