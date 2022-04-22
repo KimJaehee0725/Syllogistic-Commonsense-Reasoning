@@ -2,8 +2,7 @@ import torch
 import numpy as np
 import random
 
-from torchmetrics.functional import bleu_score
-from torchmetrics.functional.text.rouge import rouge_score
+import datasets
 
 def set_seed(random_seed):
     torch.manual_seed(random_seed)
@@ -14,16 +13,45 @@ def set_seed(random_seed):
     np.random.seed(random_seed)
     random.seed(random_seed)
 
+class Score_Calculator(self):
+    def __init__(self, tokenizer) :
+        self.bleu_scorer = datasets.load_metric('bleu')
+        self.rouge_scorer = datasets.load_metric('rouge')
+        self.special_tokens = [tokenizer.pad_token_id, tokenizer.sep_token_id, tokenizer.cls_token_id]
 
-def get_score(label : list, prediction:list):
-    """
-    label : list of string
-    prediction : list of string
+    def update_score(self, label : torch.tensor, prediction : torch.tensor) :
+        label = [[[token for token in sent if token not in self.special_tokens]] for sent in label]
+        prediction = [[token for token in sent if token not in self.special_tokens] for sent in prediction]
 
-    return : bleu, rouge (dict)
+        self.bleu_scorer.add_batch(references = label, predictions = prediction)
+        self.rouge_scorer.add_batch(references = label, predictions = prediction)
+
+    def get_final_score(self):
+        bleu = self.bleu_scorer.compute()
+        rouge = self.rouge_scorer.compute()
+
+        bleu = {f'bleu-{i+1}' : bleu.precisions[i] for i in range(4)}
+        rouge = {f'rouge-{i}' : rouge.[f"rouge{i}"] mid.fmeasure for i in ['1', '2', 'L']}
+        return bleu, rouge
+
+
+def get_score(label : torch.tensor, prediction:torch.tensor, tokenizer):
     """
-    label = label
-    prediction = prediction
+    label : tensor of shape (batch_size, seq_len)
+    prediction : tensor of shape (batch_size, seq_len)
+
+    return : bleu, rouge, Bert Score (dict)
+    """
+    label = tokenizer.batch_decode(label, skip_special_tokens = True)
+    prediction = tokenizer.batch_decode(prediction, skip_special_tokens = True)
+
+    bleu = datasets.load_metric('bleu')
+    rouge = datasets.load_metric('rouge')
+    bert_score = datasets.load_metric('bertscore')
+
+
+
+
     bleu = {"bleu-1": 0, "bleu-2": 0, "bleu-3": 0, "bleu-4": 0}
     rouge = {"rouge-1": 0, "rouge-2": 0, "rouge-l": 0}
     for i in range(len(label)):
