@@ -1,0 +1,27 @@
+{
+    "os": "Linux-5.4.0-107-generic-x86_64-with-glibc2.29",
+    "python": "3.8.10",
+    "heartbeatAt": "2022-04-21T07:39:44.433051",
+    "startedAt": "2022-04-21T07:39:36.270646",
+    "docker": null,
+    "gpu": "NVIDIA GeForce RTX 2080 Ti",
+    "gpu_count": 1,
+    "cpu_count": 4,
+    "cuda": null,
+    "args": [
+        "-num_epochs",
+        "2"
+    ],
+    "state": "running",
+    "program": "main.py",
+    "codePath": "BART/main.py",
+    "git": {
+        "remote": "https://github.com/doyooni303/Syllogistic-Commonsense-Reasoning.git",
+        "commit": "98aa78c42be05dcaf504d64fe0d31e518f2686e6"
+    },
+    "email": "jaehee_kim@korea.ac.kr",
+    "root": "/project/Syllogistic-Commonsense-Reasoning",
+    "host": "jaehee",
+    "username": "root",
+    "executable": "/usr/bin/python3"
+}

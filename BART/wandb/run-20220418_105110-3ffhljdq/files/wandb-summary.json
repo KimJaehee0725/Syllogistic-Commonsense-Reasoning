@@ -1,0 +1,1 @@
+{"train_loss": 1.096460223197937, "epoch": 7, "steps": 3883, "_timestamp": 1650280197, "_runtime": 1127, "_step": 3903, "valid bleu-1": 0.03241887026362949, "valid bleu-2": 0.0, "valid bleu-3": 0.0, "valid bleu-4": 0.0, "valid rouge-1": 0.03350819812880622, "valid rouge-2": 0.0, "valid rouge-l": 0.03350819812880622, "valid_loss": 0.9693054093254937, "_wandb": {"runtime": 1128}}
