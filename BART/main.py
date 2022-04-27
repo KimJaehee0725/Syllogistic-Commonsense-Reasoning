@@ -50,10 +50,13 @@ def main():
         val_dataloader = DataLoader(val_datasets, batch_size = args.eval_batch_size, collate_fn = collate_fn, shuffle = False)
         train(args, model, train_dataloader, tokenizer, f"fold-{args.kfold_idx}", val_dataloader)
     else:
-        val_datasets = CustomSyllogismDataset(args, "Avicenna_test.csv", tokenizer)
-        val_dataloader = DataLoader(val_datasets, batch_size = args.eval_batch_size, collate_fn = collate_fn, shuffle = False) 
-        train(args, model, train_dataloader, tokenizer, "final train", val_dataloader)
+        test_dataset = CustomSyllogismDataset(args, "Avicenna_test.csv", tokenizer)
+        test_dataloader = DataLoader(test_dataset, batch_size = args.eval_batch_size, collate_fn = collate_fn, shuffle = False) 
+        train(args, model, train_dataloader, tokenizer, "final train", test_dataloader)
 
-    
+    if args.save_final_model:
+        model.save_pretrained(args.model_path)
+        tokenizer.save_pretrained(args.model_path)
+
 if __name__ == "__main__":
     main()

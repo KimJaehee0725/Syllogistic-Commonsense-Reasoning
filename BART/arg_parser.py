@@ -1,6 +1,6 @@
 import argparse
 
-def make_parser() :
+def make_parser(is_jupyter = False) :
     parser = argparse.ArgumentParser(description='BART Train for Syllogistic Generation')
     parser.add_argument(
         '-project_name',
@@ -57,12 +57,6 @@ def make_parser() :
         "-learning_rate",
         type = float,
         default = 3e-5)
-    
-    parser.add_argument(
-        "-log_interval",
-        type = int,
-        default = 500,
-        help = "로그를 출력할 이터레이션 간격")
 
     parser.add_argument(
         "-eval_interval",
@@ -93,6 +87,20 @@ def make_parser() :
         default = 0,
         help = "kfold 인덱스")
 
-    args = parser.parse_args()
+    parser.add_argument(
+        '-save_generation',
+        type = bool,
+        default = True,
+        help = "생성된 텍스트를 저장할지 여부")
     
+    parser.add_argument(
+        '-save_final_model',
+        type = bool,
+        default = True,
+        help = "최종 모델을 저장할지 여부")
+
+    if is_jupyter:
+        args = parser.parse_args(args = [])
+    else :
+        args = parser.parse_args()
     return args
