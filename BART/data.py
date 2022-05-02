@@ -32,8 +32,8 @@ class CustomSyllogismDataset(Dataset):
 
         assert len(self.prem1) == len(self.prem2) and len(self.prem2) == len(self.label),f"데이터 길이가 다름 \n Premise 1 : {len(self.prem1)} \n Premise 2 : {len(self.prem2)} \n Label : {len(self.label)}"
 
-        self.encoder_text = [f"{self.bos}" + p1 + "." + f"{self.sep}" + p2 + "." + f"{self.eos}" + self.mask for p1, p2 in zip(self.prem1, self.prem2)]
-        self.decoder_target = [f"{self.bos}" + l + "." + f"{self.eos}" for l in self.label]
+        self.encoder_text = [f"{self.bos}" + p1  + f"{self.sep}" + p2 + f"{self.eos}" + self.mask for p1, p2 in zip(self.prem1, self.prem2)]
+        self.decoder_target = [f"{self.eos}" + f"{self.bos}" + l + f"{self.eos}" for l in self.label]
 
     def __len__(self):
         return len(self.prem1)

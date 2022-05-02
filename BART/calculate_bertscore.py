@@ -1,26 +1,19 @@
 import datasets
 import pandas as pd
 import numpy as np
-# class BertScore_Calculator():
-#     def __init__(self, tokenizer) :
-#         self.bert_scorer = datasets.load_metric('bertscore')
-#         self.special_tokens = [tokenizer.pad_token_id, tokenizer.sep_token_id, tokenizer.cls_token_id]
-
-#     def update_score(self, label : list, prediction : list) :
-#         """
-#         input 
-#         =========
-#         label : list of sentences as one mini-batch
-#         prediction : list of sentences as one mini-batch
-
-#         return 
-#         =========
-#         None
-#         """
-#         self.bert_scorer.add_batch(references = label, predictions = prediction)
+import argparse
+import os
 
 def main():
-    data_path = "/project/Syllogistic-Commonsense-Reasoning/BART/generation_log/final_generation.csv"
+    parser = argparse.ArgumentParser(description='Calculate BERT Score')
+    parser.add_argument(
+        '-data_path',
+        type=str,
+        help = "generation log 위치")
+
+    parser = parser.parse_args()
+
+    data_path = os.path.join("/project/Syllogistic-Commonsense-Reasoning/BART/generation_log/", parser.data_path, "final_generation.csv")
     
     bert_scorer = datasets.load_metric('bertscore')
     

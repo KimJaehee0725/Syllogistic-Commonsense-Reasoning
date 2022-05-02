@@ -11,7 +11,6 @@ from transformers import BartTokenizerFast, BartForConditionalGeneration
 import os
 import pandas as pd
 
-# os.environ["TOKENIZERS_PARALLELISM"] = "false"
 """
 todo : 
 2. bertscore 계산 할 코드 작성
@@ -19,10 +18,20 @@ todo :
 4. (필요 시) Mixed Precision 적용
 """
 def main():
+    args = make_parser()
     print("current working directory : ", os.getcwd())
     print("current gpu device : ", torch.cuda.current_device())
-    args = make_parser()
+    if args.accumulation_steps > 1 :
+        print("Gradient Accumulation is enabled")
+        print("Accumulation steps : ", args.accumulation_steps)
+        print("Batch size : ", args.batch_size)
+        print("Accumulated Batch size : ", args.batch_size * args.accumulation_steps)
+        
     set_seed(args.seed)      
+
+    if not os.path.exists(os.path.join(args.generation_path, args.datetime)) :
+        os.mkdir(os.path.join(args.generation_path, args.datetime))
+        os.mkdir(os.path.join(args.model_path, args.datetime))
 
     df = pd.read_csv(os.path.join(args.data_path, "Avicenna_train.csv"), encoding = 'Windows-1252')
     X = df[df["Syllogistic relation"] == "yes"]["Premise 1"].to_list()
@@ -46,10 +55,12 @@ def main():
     train_dataloader = DataLoader(train_datasets, batch_size = args.batch_size, collate_fn = collate_fn, shuffle = True)
 
     if args.kfold != 0 :
+        print("=========================", "Train with Validation Set", "=========================")
         val_datasets = CustomSyllogismDataset(args, "Avicenna_test.csv", tokenizer, kfold_idx = val_idx)
         val_dataloader = DataLoader(val_datasets, batch_size = args.eval_batch_size, collate_fn = collate_fn, shuffle = False)
         train(args, model, train_dataloader, tokenizer, f"fold-{args.kfold_idx}", val_dataloader)
     else:
+        print("=========================", "Train with Test Set", "=========================")
         test_dataset = CustomSyllogismDataset(args, "Avicenna_test.csv", tokenizer)
         test_dataloader = DataLoader(test_dataset, batch_size = args.eval_batch_size, collate_fn = collate_fn, shuffle = False) 
         train(args, model, train_dataloader, tokenizer, "final train", test_dataloader)
